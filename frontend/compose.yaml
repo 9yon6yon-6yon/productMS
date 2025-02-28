@@ -1,0 +1,9 @@
+services:
+  web:
+      build:
+        context: .
+      ports:
+        - 5173:5173
+      volumes:
+        - .:/frontend
+        - /frontend/node_modules
