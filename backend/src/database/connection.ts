@@ -13,6 +13,7 @@ export default (configService: ConfigService): TypeOrmModuleOptions => {
     //   ca: configService.get('CA_CERT'),
     // },
     // autoLoadEntities: true,
+    entities: [],
     synchronize: true,
   };
   return options;
