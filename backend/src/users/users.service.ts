@@ -22,7 +22,6 @@ export class UsersService {
   ): Promise<Users> {
     const user = new Users(createUserDto.email, createUserDto.password);
     user.role = role; // Assign role before saving
-    await user.hashPassword(); // Ensure password is hashed before saving
     try {
       await this.userRepository.save(user);
       return plainToInstance(Users, user);
