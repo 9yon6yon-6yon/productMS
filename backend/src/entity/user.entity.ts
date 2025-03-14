@@ -6,9 +6,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
 import { IsEmail } from 'class-validator';
+import * as argon2 from 'argon2';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -25,7 +25,7 @@ export class Users {
   email: string;
 
   @Exclude()
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar' })
   password: string;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
@@ -44,6 +44,6 @@ export class Users {
 
   @BeforeInsert()
   async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
+    this.password = await argon2.hash(this.password);
   }
 }

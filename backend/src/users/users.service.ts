@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserRole, Users } from 'src/entity/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
@@ -24,7 +25,7 @@ export class UsersService {
     await user.hashPassword(); // Ensure password is hashed before saving
     try {
       await this.userRepository.save(user);
-      return user;
+      return plainToInstance(Users, user);
     } catch (error) {
       throw new BadRequestException(
         `Error Saving User Data with error : ${error}`,

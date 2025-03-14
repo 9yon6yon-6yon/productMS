@@ -6,10 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import DatabaseConnection from './database/connection';
-import { JwtAuthGuard } from './auth/jwt-auth/jwt-auth.guard';
-import { APP_GUARD } from '@nestjs/core';
+// import { JwtAuthGuard } from './auth/jwt-auth/jwt-auth.guard';
+// import { APP_GUARD } from '@nestjs/core';
 import { JwtStrategy } from './auth/strategies/jwt.strategy';
-import { RolesGuard } from './common/guards/roles.guard';
+// import { RolesGuard } from './common/guards/roles.guard';
 
 @Module({
   imports: [
@@ -28,14 +28,14 @@ import { RolesGuard } from './common/guards/roles.guard';
   providers: [
     AppService,
     JwtStrategy, // Provide JWT Strategy
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard, // Apply JWT Authentication Guard globally
-    },
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard, // Apply Role Guard globally (after authentication)
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard, // Apply JWT Authentication Guard globally
+    // },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: RolesGuard, // Apply Role Guard globally (after authentication)
+    // },
   ],
 })
 export class AppModule {}

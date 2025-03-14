@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+import * as argon2 from 'argon2';
 import { LoginUserDto } from 'src/users/dto/login-user.dto';
 import { UsersService } from 'src/users/users.service';
 
@@ -14,15 +14,30 @@ export class AuthService {
   // Validate user login
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.userService.findByEmail(email);
-    if (user && (await bcrypt.compare(password, user.password))) {
-      return user;
+
+    console.log(user);
+    if (!user) {
+      throw new UnauthorizedException('Invalid email or user not exists'); // Prevents bcrypt from running on null
     }
-    throw new UnauthorizedException('Invalid email or password');
+
+    if (!user.password) {
+      throw new UnauthorizedException('User has no password set'); // Prevents bcrypt error
+    }
+
+    const isMatch = await argon2.verify(user.password, password);
+    console.log(isMatch);
+
+    if (!isMatch) {
+      throw new UnauthorizedException('Invalid email or password'); // Avoids leaking details
+    }
+
+    return user;
   }
 
   // Login function
   async login(loginDto: LoginUserDto) {
-    const user = await this.validateUser(loginDto.email, loginDto.password);
+    const { email, password } = loginDto;
+    const user = await this.validateUser(email, password);
     const payload = { sub: user.id, email: user.email, role: user.role };
     return {
       access_token: this.jwtService.sign(payload),
