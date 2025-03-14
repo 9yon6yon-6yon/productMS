@@ -15,9 +15,8 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.userService.findByEmail(email);
 
-    console.log(user);
     if (!user) {
-      throw new UnauthorizedException('Invalid email or user not exists'); // Prevents bcrypt from running on null
+      throw new UnauthorizedException('Invalid email or password'); // Prevents bcrypt from running on null
     }
 
     if (!user.password) {
@@ -25,7 +24,6 @@ export class AuthService {
     }
 
     const isMatch = await argon2.verify(user.password, password);
-    console.log(isMatch);
 
     if (!isMatch) {
       throw new UnauthorizedException('Invalid email or password'); // Avoids leaking details
