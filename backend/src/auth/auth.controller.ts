@@ -1,9 +1,12 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { UserRole } from 'src/entity/user.entity';
 import { LoginUserDto } from 'src/users/dto/login-user.dto';
+import { JwtAuthGuard } from './jwt-auth/jwt-auth.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorator/roles.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -19,6 +22,8 @@ export class AuthController {
   }
 
   // Register an admin (restricted usage)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @Post('register/admin')
   async registerAdmin(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto, UserRole.ADMIN);
