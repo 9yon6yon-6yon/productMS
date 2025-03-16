@@ -1,5 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { Log } from 'src/entity/log.entity';
 import { Users } from 'src/entity/user.entity';
 
 export default (configService: ConfigService): TypeOrmModuleOptions => {
@@ -13,8 +14,8 @@ export default (configService: ConfigService): TypeOrmModuleOptions => {
     // ssl: {
     //   ca: configService.get('CA_CERT'),
     // },
-    // autoLoadEntities: true,
-    entities: [Users],
+    entities: [Users, Log],
+    autoLoadEntities: true,
     synchronize: true,
   };
   return options;
