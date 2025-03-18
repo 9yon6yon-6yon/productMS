@@ -12,6 +12,8 @@ import DatabaseConnection from './database/connection';
 import { JwtStrategy } from './auth/strategies/jwt.strategy';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { LoggingModule } from './logging/logging.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { TransformInterceptor } from './common/interceptor/transform.interceptor';
 
 @Module({
   imports: [
@@ -39,6 +41,10 @@ import { LoggingModule } from './logging/logging.module';
     //   provide: APP_GUARD,
     //   useClass: RolesGuard, // Apply Role Guard globally (after authentication)
     // },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
   ],
 })
 export class AppModule implements NestModule {
